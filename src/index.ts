@@ -48,27 +48,32 @@ import './index.css';
 /**
  * `p-DockPanel`: the class name added to DockPanel instances.
  */
-var DOCK_PANEL_CLASS = 'p-DockPanel';
+export
+const DOCK_PANEL_CLASS = 'p-DockPanel';
 
 /**
  * `p-DockSplitPanel`: the class name added to DockSplitPanel instances.
  */
-var DOCK_SPLIT_PANEL_CLASS = 'p-DockSplitPanel';
+export
+const DOCK_SPLIT_PANEL_CLASS = 'p-DockSplitPanel';
 
 /**
  * `p-DockTabPanel`: the class name added to DockTabPanel instances.
  */
-var DOCK_TAB_PANEL_CLASS = 'p-DockTabPanel';
+export
+const DOCK_TAB_PANEL_CLASS = 'p-DockTabPanel';
 
 /**
  * `p-DockTabPanel-overlay`: the class name added to a DockTabPanel overlay.
  */
-var OVERLAY_CLASS = 'p-DockTabPanel-overlay';
+export
+const OVERLAY_CLASS = 'p-DockTabPanel-overlay';
 
 /**
  * The class name added to a tab which is being docked.
  */
-var DOCKING_CLASS = 'p-mod-docking';
+export
+const DOCKING_CLASS = 'p-mod-docking';
 
 
 /**
@@ -317,6 +322,7 @@ class DockPanel extends BoxPanel {
    * should not be called directly by user code.
    */
   handleEvent(event: Event): void {
+    console.log('***dockpanel event');
     switch (event.type) {
     case 'mousemove':
       this._evtMouseMove(event as MouseEvent);
@@ -636,6 +642,7 @@ class DockPanel extends BoxPanel {
    * Create a new dock tab panel and setup the signal handlers.
    */
   private _createTabPanel(): DockTabPanel {
+    console.log("***CREATING TAB PANEL");
     var panel = new DockTabPanel();
     panel.tabs.tabSelected.connect(this._onTabSelected, this);
     panel.tabs.tabCloseRequested.connect(this._onTabCloseRequested, this);
@@ -797,6 +804,7 @@ class DockPanel extends BoxPanel {
    * Handle the `tabCloseRequested` signal from a tab bar.
    */
   private _onTabCloseRequested(sender: TabBar, args: ITabIndexArgs): void {
+    console.log("***GOT A TAB CLOSE REQUEST");
     var item = this._findItemByTab(args.tab);
     if (item) item.widget.close();
   }
@@ -805,6 +813,7 @@ class DockPanel extends BoxPanel {
    * Handle the `tabDetachRequested` signal from the tab bar.
    */
   private _onTabDetachRequested(sender: TabBar, args: ITabDetachArgs): void {
+    console.log('***GOT A TAB DETACH REQUESTED');
     // Find the dock item for the detach operation.
     var item = this._findItemByTab(args.tab);
     if (!item) {
