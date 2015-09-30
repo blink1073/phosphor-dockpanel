@@ -499,7 +499,7 @@ describe('phosphor-dockpanel', () => {
         requestAnimationFrame(() => {
           expect(LogPanel.messages.indexOf('layout-request')).to.not.be(-1);
           var total = document.body.getBoundingClientRect();
-          // drag all of the widgets to the opposite corner and close them
+          // drag all of the widgets to the opposite corner
           var widgets = [r1, r2, r3, b1, b2, b3, g1, g2, g3, y1, y2, y3];
           for (var i = 0; i < widgets.length; i++) {
             var tab = DockPanel.getTab(widgets[i]);
@@ -516,7 +516,59 @@ describe('phosphor-dockpanel', () => {
             triggerMouseEvent(tab.node, 'mouseup',
                             { clientX: total.width - rect.left,
                               clientY: total.height - rect.top });
-            rect = tab.closeIconNode.getBoundingClientRect();
+          }
+
+          // drag all of the widgets to the left
+          for (var i = 0; i < widgets.length; i++) {
+            var tab = DockPanel.getTab(widgets[i]);
+            var rect = tab.node.getBoundingClientRect();
+            triggerMouseEvent(tab.node, 'mousedown',
+                              { clientX: rect.left,
+                                clientY: rect.top });
+            triggerMouseEvent(tab.node, 'mousemove',
+                            { clientX: rect.left + 200,
+                              clientY: rect.top + 200 });
+            triggerMouseEvent(tab.node, 'mousemove',
+                            { clientX: 0,
+                              clientY: total.height - rect.top });
+            triggerMouseEvent(tab.node, 'mouseup',
+                            { clientX: 0,
+                              clientY: total.height - rect.top });
+          }
+
+          // shuffle some widgets
+          panel.addWidget(y2, DockPanel.SplitLeft);
+          panel.addWidget(b3, DockPanel.SplitBottom);
+          panel.addWidget(g2, DockPanel.SplitRight);
+          panel.addWidget(y3, DockPanel.SplitTop);
+          panel.addWidget(g3, DockPanel.TabAfter, y3);
+          panel.addWidget(r1, DockPanel.SplitLeft);
+          panel.addWidget(b2, DockPanel.SplitRight);
+          panel.addWidget(r2, DockPanel.TabAfter, y2);
+          panel.addWidget(r3, DockPanel.SplitTop);
+
+          // drag all of the widgets off the page
+          for (var i = 0; i < widgets.length; i++) {
+            var tab = DockPanel.getTab(widgets[i]);
+            var rect = tab.node.getBoundingClientRect();
+            triggerMouseEvent(tab.node, 'mousedown',
+                              { clientX: rect.left,
+                                clientY: rect.top });
+            triggerMouseEvent(tab.node, 'mousemove',
+                            { clientX: rect.left + 200,
+                              clientY: rect.top + 200 });
+            triggerMouseEvent(tab.node, 'mousemove',
+                            { clientX: 0,
+                              clientY: 0 });
+            triggerMouseEvent(tab.node, 'mouseup',
+                            { clientX: -100,
+                              clientY: -100 });
+          }
+
+          // close all of the widgets
+          for (var i = 0; i < widgets.length; i++) {
+            var tab = DockPanel.getTab(widgets[i]);
+            var rect = tab.closeIconNode.getBoundingClientRect();
             triggerMouseEvent(tab.closeIconNode, 'click',
                               { clientX: rect.left,
                                 clientY: rect.top });
