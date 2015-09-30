@@ -42,6 +42,7 @@ import {
   DOCKING_CLASS, OVERLAY_CLASS, DockMode, DockPanel
 } from '../../lib/index';
 
+import './index.css';
 
 
 class LogPanel extends DockPanel {
@@ -356,25 +357,39 @@ describe('phosphor-dockpanel', () => {
     describe('#handleEvent()', () => {
 
       it('should be invoked during a handle grab and move', (done) => {
-        var widget0 = new Widget();
-        var widget1 = new Widget();
-        var tab0 = new Tab();
-        widget0.addClass('content');
-        widget1.addClass('content');
-        DockPanel.setTab(widget0, tab0);
-        DockPanel.setTab(widget1, new Tab());
-        var panel = new DockPanel();
+        LogPanel.messages = [];
+        var widget0 = createContent('foo');
+        var widget1 = createContent('bar');
+        var panel = new LogPanel();
         panel.id = 'main';
         panel.addWidget(widget0);
         panel.addWidget(widget1, DockPanel.TabAfter, widget0);
         attachWidget(panel, document.body);
         requestAnimationFrame(() => {
+          var tab0 = DockPanel.getTab(widget0);
           var rect = tab0.node.getBoundingClientRect();
-          console.log('**rect', rect.bottom, rect.top);
-          expect(rect.bottom - rect.top).to.not.be(0);
+          triggerMouseEvent(tab0.node, 'mousedown', 
+                            { clientX: rect.left, 
+                              clientY: rect.top });
+          triggerMouseEvent(tab0.node, 'mousemove', 
+                            { clientX: rect.left + 200, 
+                              clientY: rect.top + 200 });
+          triggerMouseEvent(tab0.node, 'mousemove', 
+                            { clientX: rect.left + 200, 
+                              clientY: rect.top });
+          triggerMouseEvent(tab0.node, 'contextmenu', 
+                            { clientX: rect.left + 200, 
+                              clientY: rect.top });
+          triggerMouseEvent(tab0.node, 'mouseup', 
+                            { clientX: rect.left + 200, 
+                              clientY: rect.top });
+          expect(LogPanel.messages.indexOf('mousemove')).to.not.be(-1);
+          expect(LogPanel.messages.indexOf('contextmenu')).to.not.be(-1);
+          expect(LogPanel.messages.indexOf('mouseup')).to.not.be(-1);
           done();
         });
       });
+
     });
 
     describe('#onChildAdded()', () => {
