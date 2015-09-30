@@ -368,20 +368,20 @@ describe('phosphor-dockpanel', () => {
         requestAnimationFrame(() => {
           var tab0 = DockPanel.getTab(widget0);
           var rect = tab0.node.getBoundingClientRect();
-          triggerMouseEvent(tab0.node, 'mousedown', 
-                            { clientX: rect.left, 
+          triggerMouseEvent(tab0.node, 'mousedown',
+                            { clientX: rect.left,
                               clientY: rect.top });
-          triggerMouseEvent(tab0.node, 'mousemove', 
-                            { clientX: rect.left + 200, 
+          triggerMouseEvent(tab0.node, 'mousemove',
+                            { clientX: rect.left + 200,
                               clientY: rect.top + 200 });
-          triggerMouseEvent(tab0.node, 'mousemove', 
-                            { clientX: rect.left + 200, 
+          triggerMouseEvent(tab0.node, 'mousemove',
+                            { clientX: rect.left + 200,
                               clientY: rect.top });
-          triggerMouseEvent(tab0.node, 'contextmenu', 
-                            { clientX: rect.left + 200, 
+          triggerMouseEvent(tab0.node, 'contextmenu',
+                            { clientX: rect.left + 200,
                               clientY: rect.top });
-          triggerMouseEvent(tab0.node, 'mouseup', 
-                            { clientX: rect.left + 200, 
+          triggerMouseEvent(tab0.node, 'mouseup',
+                            { clientX: rect.left + 200,
                               clientY: rect.top });
           expect(LogPanel.messages.indexOf('mousemove')).to.not.be(-1);
           expect(LogPanel.messages.indexOf('contextmenu')).to.not.be(-1);
@@ -412,6 +412,38 @@ describe('phosphor-dockpanel', () => {
                             { clientX: rect.left + 200, 
                               clientY: rect.top });
           panel.dispose();
+          expect(LogPanel.messages.indexOf('mousemove')).to.not.be(-1);
+          done();
+        });
+      });
+
+      it('should return to the initial position', (done) => {
+        LogPanel.messages = [];
+        var widget0 = createContent('foo');
+        var widget1 = createContent('bar');
+        var panel = new LogPanel();
+        panel.id = 'main';
+        panel.addWidget(widget0);
+        panel.addWidget(widget1, DockPanel.TabAfter, widget0);
+        attachWidget(panel, document.body);
+        requestAnimationFrame(() => {
+          var tab0 = DockPanel.getTab(widget0);
+          var rect = tab0.node.getBoundingClientRect();
+          triggerMouseEvent(tab0.node, 'mousedown',
+                            { clientX: rect.left,
+                              clientY: rect.top });
+          triggerMouseEvent(tab0.node, 'mousemove',
+                            { clientX: rect.left + 200, 
+                              clientY: rect.top + 200 });
+          triggerMouseEvent(tab0.node, 'mousemove',
+                            { clientX: rect.left + 200,
+                              clientY: rect.top });
+          triggerMouseEvent(tab0.node, 'mousemove',
+                            { clientX: -100,
+                              clientY: -100 });
+          triggerMouseEvent(tab0.node, 'mouseup',
+                            { clientX: -100,
+                              clientY: -100 });
           expect(LogPanel.messages.indexOf('mousemove')).to.not.be(-1);
           done();
         });
