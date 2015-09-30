@@ -322,7 +322,6 @@ class DockPanel extends BoxPanel {
    * should not be called directly by user code.
    */
   handleEvent(event: Event): void {
-    console.log('***dockpanel event');
     switch (event.type) {
     case 'mousemove':
       this._evtMouseMove(event as MouseEvent);
@@ -642,7 +641,6 @@ class DockPanel extends BoxPanel {
    * Create a new dock tab panel and setup the signal handlers.
    */
   private _createTabPanel(): DockTabPanel {
-    console.log("***CREATING TAB PANEL");
     var panel = new DockTabPanel();
     panel.tabs.tabSelected.connect(this._onTabSelected, this);
     panel.tabs.tabCloseRequested.connect(this._onTabCloseRequested, this);
@@ -804,7 +802,6 @@ class DockPanel extends BoxPanel {
    * Handle the `tabCloseRequested` signal from a tab bar.
    */
   private _onTabCloseRequested(sender: TabBar, args: ITabIndexArgs): void {
-    console.log("***GOT A TAB CLOSE REQUEST");
     var item = this._findItemByTab(args.tab);
     if (item) item.widget.close();
   }
@@ -813,7 +810,6 @@ class DockPanel extends BoxPanel {
    * Handle the `tabDetachRequested` signal from the tab bar.
    */
   private _onTabDetachRequested(sender: TabBar, args: ITabDetachArgs): void {
-    console.log('***GOT A TAB DETACH REQUESTED');
     // Find the dock item for the detach operation.
     var item = this._findItemByTab(args.tab);
     if (!item) {
