@@ -498,7 +498,8 @@ describe('phosphor-dockpanel', () => {
         expect(LogPanel.messages.indexOf('after-attach')).to.not.be(-1);
         requestAnimationFrame(() => {
           expect(LogPanel.messages.indexOf('layout-request')).to.not.be(-1);
-          // drag all of the widgets to the top left and close them
+          var total = document.body.getBoundingClientRect();
+          // drag all of the widgets to the opposite corner and close them
           var widgets = [r1, r2, r3, b1, b2, b3, g1, g2, g3, y1, y2, y3];
           for (var i = 0; i < widgets.length; i++) {
             var tab = DockPanel.getTab(widgets[i]);
@@ -510,9 +511,11 @@ describe('phosphor-dockpanel', () => {
                             { clientX: rect.left + 200,
                               clientY: rect.top + 200 });
             triggerMouseEvent(tab.node, 'mousemove',
-                            { clientX: 0, clientY: 0 });
+                            { clientX: total.width - rect.left,
+                              clientY: total.height - rect.top });
             triggerMouseEvent(tab.node, 'mouseup',
-                            { clientX: 0, clientY: 0 });
+                            { clientX: total.width - rect.left,
+                              clientY: total.height - rect.top });
             rect = tab.closeIconNode.getBoundingClientRect();
             triggerMouseEvent(tab.closeIconNode, 'click',
                               { clientX: rect.left,
