@@ -10,11 +10,7 @@
 import expect = require('expect.js');
 
 import {
-  BoxPanel
-} from 'phosphor-boxpanel';
-
-import {
-  Message, postMessage, sendMessage
+  Message
 } from 'phosphor-messaging';
 
 import {
@@ -22,19 +18,11 @@ import {
 } from 'phosphor-properties';
 
 import {
-  SplitPanel
-} from 'phosphor-splitpanel';
-
-import {
-  StackedPanel
-} from 'phosphor-stackedpanel';
-
-import {
-  Tab, TabBar
+  Tab
 } from 'phosphor-tabs';
 
 import {
-  attachWidget, detachWidget, ResizeMessage, Widget
+  attachWidget, Widget
 } from 'phosphor-widget';
 
 import {
@@ -73,7 +61,7 @@ class LogWidget extends Widget {
 }
 
 
-function triggerMouseEvent (node: HTMLElement, eventType: string, options: any={}) {
+function triggerMouseEvent(node: HTMLElement, eventType: string, options: any={}) {
   options.bubbles = true;
   var clickEvent = new MouseEvent(eventType, options);
   node.dispatchEvent(clickEvent);
@@ -256,11 +244,6 @@ describe('phosphor-dockpanel', () => {
         expect(panel.hasClass(DOCK_PANEL_CLASS)).to.be(true);
       });
 
-      it('should add a split panel child', () => {
-        var panel = new DockPanel();
-        expect(panel.children[0] instanceof SplitPanel).to.be(true);
-      });
-
     });
 
     describe('#dispose()', () => {
@@ -304,7 +287,11 @@ describe('phosphor-dockpanel', () => {
         DockPanel.setTab(widget, new Tab());
         var panel = new DockPanel();
         panel.addWidget(widget);
-        expect(widget.parent instanceof StackedPanel).to.be(true);
+        var parent = widget.parent;
+        while (parent.parent !== null) {
+          parent = parent.parent;
+        }
+        expect(parent instanceof DockPanel).to.be(true);
       });
 
       it('should throw an error if the tab property is not set', () => {
@@ -318,7 +305,11 @@ describe('phosphor-dockpanel', () => {
         DockPanel.setTab(widget, new Tab());
         var panel = new DockPanel();
         panel.addWidget(widget, DockMode.SplitTop);
-        expect(widget.parent instanceof StackedPanel).to.be(true);
+        var parent = widget.parent;
+        while (parent.parent !== null) {
+          parent = parent.parent;
+        }
+        expect(parent instanceof DockPanel).to.be(true);
       });
 
       it('should insert relative to root if ref is not in dock', () => {
@@ -327,7 +318,11 @@ describe('phosphor-dockpanel', () => {
         DockPanel.setTab(widget0, new Tab());
         var panel = new DockPanel();
         panel.addWidget(widget0, DockMode.TabAfter, widget1);
-        expect(widget0.parent instanceof StackedPanel).to.be(true);
+        var parent = widget0.parent;
+        while (parent.parent !== null) {
+          parent = parent.parent;
+        }
+        expect(parent instanceof DockPanel).to.be(true);
       });
 
       it('should move to a new location if already in the panel', () => {
@@ -339,7 +334,11 @@ describe('phosphor-dockpanel', () => {
         panel.addWidget(widget0);
         panel.addWidget(widget1, DockMode.TabBefore, widget0);
         panel.addWidget(widget0, DockMode.SplitLeft, widget1);
-        expect(widget0.parent instanceof StackedPanel).to.be(true);
+        var parent = widget0.parent;
+        while (parent.parent !== null) {
+          parent = parent.parent;
+        }
+        expect(parent instanceof DockPanel).to.be(true);
       });
 
       it('should throw an error if the widget and the ref are the same', () => {
