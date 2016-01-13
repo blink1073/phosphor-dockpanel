@@ -373,13 +373,14 @@ class DockPanel extends Widget {
       event.dropAction = DropAction.None;
       return;
     }
-    let widget = factory();
-    if (!(widget instanceof Widget)) {
-      event.dropAction = DropAction.None;
-      return;
-    }
-    DockPanelPrivate.handleDrop(this, widget, target);
-    event.dropAction = event.proposedAction;
+    Promise.resolve(factory()).then(widget => {
+      if (!(widget instanceof Widget)) {
+        event.dropAction = DropAction.None;
+        return;
+      }
+      DockPanelPrivate.handleDrop(this, widget, target);
+      event.dropAction = event.proposedAction;
+    });
   }
 }
 
